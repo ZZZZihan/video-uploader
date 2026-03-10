@@ -50,6 +50,7 @@ class YouTubeDownloader:
             # Fallback to format 18 (360p) which usually works even with bot protection
             fallback_options = options.copy()
             fallback_options["format"] = "18"
+            print(f"⚠️ 高级格式下载失败，回退到360p: {str(primary_error)[:100]}...")
             with YoutubeDL({key: value for key, value in fallback_options.items() if value is not None}) as ydl:
                 info = ydl.extract_info(url, download=True)
                 guessed_path = Path(info.get("_filename") or ydl.prepare_filename(info))
