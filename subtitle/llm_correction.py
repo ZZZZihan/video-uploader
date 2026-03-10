@@ -189,7 +189,11 @@ class SubtitleCorrector:
 
     @staticmethod
     def _build_minimax_payload(model: str, system_prompt: str, user_prompt: str, base_url: str) -> dict[str, Any]:
-        if base_url.rstrip("/").endswith("chat/completions"):
+        # Check for OpenAI-compatible endpoints (chat/completions or chatcompletion)
+        normalized_url = base_url.rstrip("/").lower()
+        is_openai_compatible = "chat/completions" in normalized_url or "chatcompletion" in normalized_url
+
+        if is_openai_compatible:
             return {
                 "model": model,
                 "temperature": 0.2,

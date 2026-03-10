@@ -41,9 +41,18 @@ class YouTubeDownloader:
         if cookie_path.exists():
             options["cookiefile"] = str(cookie_path)
 
-        with YoutubeDL({key: value for key, value in options.items() if value is not None}) as ydl:
-            info = ydl.extract_info(url, download=True)
-            guessed_path = Path(info.get("_filename") or ydl.prepare_filename(info))
+        # Try primary format first, fallback to format 18 (360p) if failed
+        try:
+            with YoutubeDL({key: value for key, value in options.items() if value is not None}) as ydl:
+                info = ydl.extract_info(url, download=True)
+                guessed_path = Path(info.get("_filename") or ydl.prepare_filename(info))
+        except Exception as primary_error:
+            # Fallback to format 18 (360p) which usually works even with bot protection
+            fallback_options = options.copy()
+            fallback_options["format"] = "18"
+            with YoutubeDL({key: value for key, value in fallback_options.items() if value is not None}) as ydl:
+                info = ydl.extract_info(url, download=True)
+                guessed_path = Path(info.get("_filename") or ydl.prepare_filename(info))
 
         final_path = self._resolve_download_path(working_dir, guessed_path)
         if output_is_file:
