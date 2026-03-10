@@ -38,10 +38,11 @@ class WhisperTranscriber:
         target_path.parent.mkdir(parents=True, exist_ok=True)
 
         model = WhisperModel(model_size, device="auto", compute_type="int8")
+        # Disable vad_filter which may cause empty results for some videos
         segments, _info = model.transcribe(
             str(media_path),
             language=language,
-            vad_filter=True,
+            vad_filter=False,
             beam_size=5,
         )
 

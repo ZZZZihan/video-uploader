@@ -60,9 +60,11 @@ class SubtitleBurner:
 
         try:
             source = ffmpeg.input(str(video_path))
+            # Use simpler subtitle path handling for ffmpeg
+            subtitle_path_str = str(subtitle_to_use).replace("\\", "\\\\").replace(":", "\\:").replace(",", "\\,")
             video_stream = source.video.filter(
                 "subtitles",
-                self._escape_subtitle_path(subtitle_to_use),
+                subtitle_path_str,
                 force_style=self._force_style(style),
             )
             audio_stream = source.audio

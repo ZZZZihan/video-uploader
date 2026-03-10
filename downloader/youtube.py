@@ -14,7 +14,7 @@ class YouTubeDownloader:
         self,
         url: str,
         output_path: str | Path | None = None,
-        format_selector: str = "bestvideo+bestaudio/best",
+        format_selector: str = "bestvideo[height<=1080]+bestaudio/best[height<=1080]",
         proxy: str | None = None,
     ) -> Path:
         try:

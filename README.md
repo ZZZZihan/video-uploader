@@ -27,12 +27,20 @@ source venv/bin/activate  # Linux/macOS
 pip install -r requirements.txt
 
 # 4. 安装系统依赖
-# macOS
+# macOS - 需要ffmpeg-full才支持字幕烧录
 brew install ffmpeg
+# 如果需要字幕烧录，安装完整版
+# brew install ffmpeg-full
+
 # Ubuntu
 sudo apt install ffmpeg
+
 # Windows
 # 下载 https://ffmpeg.org/download.html
+
+# 5. 安装yt-dlp浏览器支持（用于下载受保护的视频）
+# 需要先在Chrome/Safari登录YouTube
+pip install curl_cffi
 ```
 
 ## 配置
@@ -54,12 +62,39 @@ cp config/settings.yaml.example config/settings.yaml
 - `MINIMAX_BASE_URL`
 - `MINIMAX_MODEL`
 
+### 刷新YouTube Cookie（重要！）
+
+YouTube Cookie会过期，需要定期刷新：
+
+```bash
+# 在Chrome登录YouTube后执行
+mkdir -p cookies
+yt-dlp --cookies-from-browser chrome --cookies cookies/youtube.txt "https://www.youtube.com/watch?v=xxx" --skip-download
+```
+
 ## 使用
+
+### 注意事项
+
+⚠️ **YouTube视频下载**：部分视频有SABR保护，可能导致下载失败或画质受限。解决方案：
+1. 使用代理/VPN
+2. 刷新Cookie后重试
+3. 视频有保护时默认回退到360p
 
 ### 下载视频
 
 ```bash
+# 默认下载1080p（受保护视频会回退到360p）
 python cli.py download --url "https://www.youtube.com/watch?v=xxx"
+
+# 指定更高画质（需要代理或Cookie有效）
+python cli.py download --url "https://www.youtube.com/watch?v=xxx" --format "bestvideo[height<=2160]+bestaudio/best"
+
+# 指定360p（最快，最稳定）
+python cli.py download --url "https://www.youtube.com/watch?v=xxx" --format "18"
+
+# 使用代理
+python cli.py download --url "URL" --proxy "http://127.0.0.1:7890"
 ```
 
 ### 获取字幕
