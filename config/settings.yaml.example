@@ -1,0 +1,31 @@
+# video-uploader 配置文件示例
+# 复制为 config/settings.yaml 并修改
+
+# 输出目录
+output_dir: output
+temp_dir: tmp
+
+# YouTube Cookie 路径（用于下载会员视频）
+youtube_cookies_path: cookies/youtube.txt
+
+# B站 Cookie 路径
+bilibili_cookies_path: cookies/bilibili.json
+
+# 代理设置（可选）
+# proxy: "http://127.0.0.1:7890"
+
+# OpenAI API 配置
+openai:
+  # 从环境变量读取: OPENAI_API_KEY
+  # api_key: "your-api-key"
+  base_url: "https://api.openai.com/v1"
+  model: "gpt-4o-mini"
+  timeout: 120.0
+
+# MiniMax API 配置
+minimax:
+  # 从环境变量读取: MINIMAX_API_KEY
+  # api_key: "your-api-key"
+  base_url: "https://api.minimax.chat/v1/text/chatcompletion_v2"
+  model: "MiniMax-Text-01"
+  timeout: 120.0
